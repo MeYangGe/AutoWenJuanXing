@@ -14,7 +14,7 @@ export default {
       // 配置自动提交间隔与自动刷新时间，单位ms
       auto: 1, //启用自动提交，默认关闭。0关闭，1开启
       submitTime: 2000, //提交时间
-      refreshTime: 3000, //刷新时间，如想快速重复提交，改小点，但是若有滑块会卡bug
+      refreshTime: 6000, //刷新时间，如想快速重复提交，改小点，但是若有滑块会卡bug
       single: 0,//1为固定单选，0为随机单选
       cho: 1, //固定单选选项，1为选择第一个，以此类推
       config: [
@@ -29,17 +29,6 @@ export default {
       ],
 
     }
-  },
-  beforeCreate() {
-    const keys = document.cookie.match(/[^ =;]+(?=\=)/g);
-    if (keys) {
-      for (let i = keys.length; i--;) {
-        document.cookie = keys[i] + '=0;path=/;expires=' + new Date(0).toUTCString();//清除当前域名下的,例如：m.kevis.com
-        document.cookie = keys[i] + '=0;path=/;domain=' + document.domain + ';expires=' + new Date(0).toUTCString();//清除当前域名下的，例如 .m.kevis.com
-        document.cookie = keys[i] + '=0;path=/;domain=kevis.com;expires=' + new Date(0).toUTCString();//清除一级域名下的或指定的，例如 .kevis.com
-      }
-    }
-    console.log('在创建页面之前执行的方法');
   },
   methods: {
     handleClose() {
@@ -198,58 +187,23 @@ export default {
       select.selectedIndex = this.randInt(1, select.length - 1);
     },
 
-    singleSlider(subject) {
-      console.log("singleSlider");
+    /**
+     *
+     * @param {int} _value 随机值
+     * @param {*} min 可选的最小值
+     * @param {*} max 可选的最大值
+     * @param {*} subject 题目
+     * @param {*} current 当前第几题
+     *
+     */
 
-      /**
-       *
-       * @param {int} _value 随机值
-       * @param {*} min 可选的最小值
-       * @param {*} max 可选的最大值
-       * @param {*} subject 题目
-       * @description 里面的_coordsX, _Number, getElCoordinate, 方法不用管，这是根据网页的方法复制下来的， 用来反模拟出clientX的值（即鼠标的值）, 因为网页上没有提供js直接修改的value，因此只能模拟鼠标时间来点击拉条，需要参数clientX。
-       *
-       */
-
-      // function getClientX(_value, min, max, subject) {
-      //   const _bar = subject.querySelectorAll(".imageBar1")[0];
-      //   const _slider = subject.querySelectorAll(".imageSlider1")[0];
-      //
-      //   function _coordsX(x) {
-      //     x = _Number(x);
-      //     x = x <= _slider.offsetLeft ? _slider.offsetLeft : x >= _slider.offsetLeft + _slider.offsetWidth - _bar.offsetWidth ? _slider.offsetLeft + _slider.offsetWidth - _bar.offsetWidth : x;
-      //     return x;
-      //   }
-      //
-      //   function _Number(b) {
-      //     return isNaN(b) ? 0 : b;
-      //   }
-      //
-      //   function getElCoordinate(h) {
-      //     let e = h.offsetLeft;
-      //     while (h === h.offsetParent) {
-      //       e += h.offsetLeft;
-      //     }
-      //     return {
-      //       left: e,
-      //     };
-      //   }
-      //
-      //   let x = (_value - min) * ((_slider.offsetWidth - _bar.offsetWidth) / (max - min));
-      //   x = _coordsX(x);
-      //   const clientX = x + getElCoordinate(_slider).left + (_bar.offsetWidth / 2);
-      //   return Math.round(clientX);
-      // }
-      //
-      // const max = Number(subject.querySelectorAll(".slider")[0].getAttribute("maxvalue"));
-      // const min = Number(subject.querySelectorAll(".slider")[0].getAttribute("minvalue"));
-      // //模拟鼠标点击的事件, 关键参数ClientX
-      // const evt = new MouseEvent("click", {
-      //   clientX: getClientX(this.randInt(min, max), min, max, subject),
-      //   type: "click",
-      //   __proto__: MouseEvent,
-      // });
-      // subject.querySelectorAll(".ruler")[0].dispatchEvent(evt);
+    singleSlider(subject,current) {
+      const max = Number(subject.querySelectorAll("input")[0].getAttribute("max"));
+      const min = Number(subject.querySelectorAll("input")[0].getAttribute("min"));
+      let score = this.randInt(min, max);
+      console.log(subject.querySelector(`#q${current}`))
+      subject.querySelector(`#q${current}`).value = score;
+      console.log("对于问题", current, "输入的分数", score);
     },
     singleStar(subject) {
       const td = subject.querySelectorAll(".td");
@@ -314,7 +268,7 @@ export default {
           console.log("填空", i);
         } else if (q[i].querySelectorAll(".rangeslider")[0]) {
           console.log("Slider-Single-line", i);
-          this.singleSlider(q[i]);
+          this.singleSlider(q[i],i+1);
         } else if (q[i].querySelectorAll(".scale-rating")[0]) {
           console.log("Star-Single-line", i);
           this.singleStar(q[i]);
@@ -341,43 +295,78 @@ export default {
       /**
        * 自动提交
        */
-      this.autoSubmit()
-      this.clearCookie()
-    },
-    clearCookie() {
-      const keys = document.cookie.match(/[^ =;]+(?=\=)/g);
-      if (keys) {
-        for (let i = keys.length; i--;) {
-          document.cookie = keys[i] + '=0;path=/;expires=' + new Date(0).toUTCString();//清除当前域名下的,例如：m.kevis.com
-          document.cookie = keys[i] + '=0;path=/;domain=' + document.domain + ';expires=' + new Date(0).toUTCString();//清除当前域名下的，例如 .m.kevis.com
-          document.cookie = keys[i] + '=0;path=/;domain=kevis.com;expires=' + new Date(0).toUTCString();//清除一级域名下的或指定的，例如 .kevis.com
-        }
-      }
+      this.submit()
     },
     /**
      * 自动提交
      */
-    autoSubmit() {
-      if (this.auto === 1) {
-        setTimeout(function () {
-          const startTime = document.getElementById('starttime');
-          const date = new Date();
-          startTime.value = `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate().toString().padStart(2, '0')} ${date.getHours()}:${date.getMinutes() < 10 ? "0" : date.getMinutes() - 7}:${date.getSeconds()}`
-          // 延时两秒防止验证
-          document.getElementById("ctlNext").click();
-          console.log(document.getElementById("#rectMask"))
-          if(document.getElementById("#rectMask")){
-            // console.log(document.getElementById("#rectMask"))
-            document.querySelectorAll(".rect-top")[0].click()
+    submit() {
+      // 延迟 1 秒后单击确认按钮
+      setTimeout(() => {
+        this.modifyStartTime();
+        // 点击提交按钮
+        const nextBtn = document.evaluate('//*[@id="ctlNext"]', document, null,
+            XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+        if (nextBtn) {
+          nextBtn.click();
+        }
+      }, 5000);
+      // 延迟 1 秒后单击确认按钮
+      setTimeout(() => {
+        document.querySelector('.layui-layer-btn0').click();
+      }, 1000);
+      // 延迟 2 秒后单击验证按钮
+      setTimeout(() => {
+        document.querySelector('#rectMask').click();
+      }, 2000);
+      // 延迟 4 秒后执行 simulateSliderVerification 函数
+      setTimeout(() => {
+        this.simulateSliderVerification();
+      }, 4000);
+      setTimeout(() => {
+        const keys = document.cookie.match(/[^ =;]+(?=\=)/g);
+        if (keys) {
+          for (let i = keys.length; i--;) {
+            document.cookie = keys[i] + '=0;path=/;expires=' + new Date(0).toUTCString();//清除当前域名下的,例如：m.kevis.com
+            document.cookie = keys[i] + '=0;path=/;domain=' + document.domain + ';expires=' + new Date(0).toUTCString();//清除当前域名下的，例如 .m.kevis.com
           }
-          console.log("答题成功!");
-        }, this.submitTime);
-        setTimeout(function () {
-          // 自动刷新,解决验证问题
-          location.reload();
-        }, this.refreshTime);
+        }
+      }, 6000);
+      setTimeout(() => {
+        // 自动刷新,解决验证问题
+        location.reload();
+      }, this.refreshTime);
+
+
+    },
+    // 滑块验证功能
+    simulateSliderVerification() {
+      const slider = document.querySelector('#nc_1__scale_text > span');
+      console.log("slider", slider);
+      if (slider.textContent.startsWith('请按住滑块')) {
+        const width = slider.offsetWidth;
+        const eventOptions = {bubbles: true, cancelable: true};
+        const dragStartEvent = new MouseEvent('mousedown', eventOptions);
+        const dragEndEvent = new MouseEvent('mouseup', eventOptions);
+        const steps = 10;
+        const stepWidth = width / steps;
+        let currX = stepWidth / 2;
+        slider.dispatchEvent(dragStartEvent);
+        const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
+        for (let i = 0; i < steps; i++) {
+          slider.dispatchEvent(new MouseEvent('mousemove', Object.assign({clientX: currX}, eventOptions)));
+          currX += stepWidth;
+          delay(50);
+        }
+        slider.dispatchEvent(dragEndEvent);
+        console.log("滑块已滑动");
       }
-    }
+    },
+    modifyStartTime() {
+      const startTime = document.getElementById('starttime');
+      const date = new Date();
+      startTime.value = `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate().toString().padStart(2, '0')} ${date.getHours()}:${date.getMinutes() < 10 ? "0" : date.getMinutes() - 7}:${date.getSeconds()}`
+    },
   }
 }
 </script>
