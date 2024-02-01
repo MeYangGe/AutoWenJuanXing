@@ -30,6 +30,17 @@ export default {
 
     }
   },
+  beforeCreate() {
+    const keys = document.cookie.match(/[^ =;]+(?=\=)/g);
+    if (keys) {
+      for (let i = keys.length; i--;) {
+        document.cookie = keys[i] + '=0;path=/;expires=' + new Date(0).toUTCString();//清除当前域名下的,例如：m.kevis.com
+        document.cookie = keys[i] + '=0;path=/;domain=' + document.domain + ';expires=' + new Date(0).toUTCString();//清除当前域名下的，例如 .m.kevis.com
+        document.cookie = keys[i] + '=0;path=/;domain=kevis.com;expires=' + new Date(0).toUTCString();//清除一级域名下的或指定的，例如 .kevis.com
+      }
+    }
+    console.log('在创建页面之前执行的方法');
+  },
   methods: {
     handleClose() {
       this.judgeType()
@@ -331,7 +342,7 @@ export default {
        * 自动提交
        */
       this.autoSubmit()
-
+      this.clearCookie()
     },
     clearCookie() {
       const keys = document.cookie.match(/[^ =;]+(?=\=)/g);
@@ -354,10 +365,14 @@ export default {
           startTime.value = `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate().toString().padStart(2, '0')} ${date.getHours()}:${date.getMinutes() < 10 ? "0" : date.getMinutes() - 7}:${date.getSeconds()}`
           // 延时两秒防止验证
           document.getElementById("ctlNext").click();
+          console.log(document.getElementById("#rectMask"))
+          if(document.getElementById("#rectMask")){
+            // console.log(document.getElementById("#rectMask"))
+            document.querySelectorAll(".rect-top")[0].click()
+          }
           console.log("答题成功!");
         }, this.submitTime);
         setTimeout(function () {
-          this.clearCookie();
           // 自动刷新,解决验证问题
           location.reload();
         }, this.refreshTime);
