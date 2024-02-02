@@ -1,5 +1,26 @@
 <template>
-  <div class="Wokoo-hide" @click="handleClose">
+  <div class="Wokoo-hide">
+    <input v-model="submitTime">
+    <el-row>
+      <el-button circle>
+        <Search/>
+      </el-button>
+      <el-button type="primary" circle>
+        <Edit/>
+      </el-button>
+      <el-button type="success" circle>
+        <Check/>
+      </el-button>
+      <el-button type="info" circle>
+        <Message/>
+      </el-button>
+      <el-button type="warning" circle>
+        <Star/>
+      </el-button>
+      <el-button type="danger" circle>
+        <Delete/>
+      </el-button>
+    </el-row>
     <img :src="logo" class="Wokoo-hide-logo" alt="logo"/>
   </div>
 </template>
@@ -34,6 +55,9 @@ export default {
   methods: {
     handleClose() {
       this.judgeType()
+    },
+    handlePrint() {
+      console.log(this.submitTime)
     },
     /**
      *
