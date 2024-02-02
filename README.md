@@ -1,6 +1,4 @@
-## Wjx
-
-基于 wokoo 搭建的初始化工程，用于油猴插件开发。
+## AutoWjx
 
 **基础配置：**
 
@@ -62,18 +60,3 @@ npm run build
 3. 点击账号名称，再点击**发布你编写的脚本**
 4. 进入编辑页，将 tampermonkey.txt 里的内容复制到编辑框中，记得将里面的`localhost:8080`网址替换成静态资源 url
 5. 点击 「发布脚本」即可
-
-## 例子 demo
-
-我已经使用 wokoo 脚手架开发了多个 demo，并发布到[油猴市场](https://greasyfork.org/)，欢迎安装试用。
-[wokoo-demo](https://greasyfork.org/zh-CN/scripts/420327-wokoo-demo): 简单的示例插件
-[zhihu-helper](https://greasyfork.org/zh-CN/scripts/421238-zhihu-helper): 知乎目录
-[MoveSearch](https://greasyfork.org/zh-CN/scripts/420327-MoveSearch): 划词搜索，默认搜[开发者搜索](http://kaifa.baidu.com)
-
-[快速上手油猴插件开发（实战篇）](https://juejin.cn/post/6925605904561750030) 详细写了开发过程
-
-## 了解更多
-
-如果想了解更多内容，请访问下面的网址：
-[油猴脚手架 wokoo 使用说明](https://juejin.cn/post/6922815205575491597)
-[油猴脚手架 wokoo git 仓库](https://github.com/kinyaying/wokoo)
