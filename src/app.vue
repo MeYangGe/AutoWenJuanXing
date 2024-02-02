@@ -13,6 +13,7 @@ export default {
       logo,
       // 配置自动提交间隔与自动刷新时间，单位ms
       auto: 1, //启用自动提交，默认关闭。0关闭，1开启
+      clearCookie: 0, //启用清除cookie，默认关闭。0关闭，1开启
       submitTime: 2000, //提交时间
       refreshTime: 6000, //刷新时间，如想快速重复提交，改小点，但是若有滑块会卡bug
       single: 0,//1为固定单选，0为随机单选
@@ -197,7 +198,7 @@ export default {
      *
      */
 
-    singleSlider(subject,current) {
+    singleSlider(subject, current) {
       const max = Number(subject.querySelectorAll("input")[0].getAttribute("max"));
       const min = Number(subject.querySelectorAll("input")[0].getAttribute("min"));
       let score = this.randInt(min, max);
@@ -268,7 +269,7 @@ export default {
           console.log("填空", i);
         } else if (q[i].querySelectorAll(".rangeslider")[0]) {
           console.log("Slider-Single-line", i);
-          this.singleSlider(q[i],i+1);
+          this.singleSlider(q[i], i + 1);
         } else if (q[i].querySelectorAll(".scale-rating")[0]) {
           console.log("Star-Single-line", i);
           this.singleStar(q[i]);
@@ -301,16 +302,18 @@ export default {
      * 自动提交
      */
     submit() {
-      // 延迟 1 秒后单击确认按钮
-      setTimeout(() => {
-        this.modifyStartTime();
-        // 点击提交按钮
-        const nextBtn = document.evaluate('//*[@id="ctlNext"]', document, null,
-            XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
-        if (nextBtn) {
-          nextBtn.click();
-        }
-      }, 5000);
+      // 延迟 5 秒后单击确认按钮
+      if (this.auto === 1) {
+        setTimeout(() => {
+          this.modifyStartTime();
+          // 点击提交按钮
+          const nextBtn = document.evaluate('//*[@id="ctlNext"]', document, null,
+              XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+          if (nextBtn) {
+            nextBtn.click();
+          }
+        }, 5000);
+      }
       // 延迟 1 秒后单击确认按钮
       setTimeout(() => {
         document.querySelector('.layui-layer-btn0').click();
@@ -323,19 +326,21 @@ export default {
       setTimeout(() => {
         this.simulateSliderVerification();
       }, 4000);
-      setTimeout(() => {
-        const keys = document.cookie.match(/[^ =;]+(?=\=)/g);
-        if (keys) {
-          for (let i = keys.length; i--;) {
-            document.cookie = keys[i] + '=0;path=/;expires=' + new Date(0).toUTCString();//清除当前域名下的,例如：m.kevis.com
-            document.cookie = keys[i] + '=0;path=/;domain=' + document.domain + ';expires=' + new Date(0).toUTCString();//清除当前域名下的，例如 .m.kevis.com
+      if (this.clearCookie === 1) {
+        setTimeout(() => {
+          const keys = document.cookie.match(/[^ =;]+(?=\=)/g);
+          if (keys) {
+            for (let i = keys.length; i--;) {
+              document.cookie = keys[i] + '=0;path=/;expires=' + new Date(0).toUTCString();//清除当前域名下的,例如：m.kevis.com
+              document.cookie = keys[i] + '=0;path=/;domain=' + document.domain + ';expires=' + new Date(0).toUTCString();//清除当前域名下的，例如 .m.kevis.com
+            }
           }
-        }
-      }, 6000);
-      setTimeout(() => {
-        // 自动刷新,解决验证问题
-        location.reload();
-      }, this.refreshTime);
+        }, 6000);
+      }
+      // setTimeout(() => {
+      //   // 自动刷新,解决验证问题
+      //   location.reload();
+      // }, this.refreshTime);
 
 
     },
