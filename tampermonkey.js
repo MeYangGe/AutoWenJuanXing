@@ -11,8 +11,8 @@
 
 ;(function () {
   'use strict'
-  if (location.href === 'http://localhost:8080/') return
+  if (location.href === 'https://cdn.jsdelivr.net/') return
   var script = document.createElement('script')
-  script.src = 'http://localhost:8080/app.bundle.js'
+  script.src = 'https://cdn.jsdelivr.net/gh/MeYangGe/AutoWenJuanXing@master/dist/app.bundle.js'
   document.body.appendChild(script)
 })()
