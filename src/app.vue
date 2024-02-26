@@ -13,7 +13,7 @@ export default {
       logo,
       // 配置自动提交间隔与自动刷新时间，单位ms
       auto: 1, //启用自动提交，默认关闭。0关闭，1开启
-      clearCookie: 0, //启用清除cookie，默认关闭。0关闭，1开启
+      clearCookie: 1, //启用清除cookie，默认关闭。0关闭，1开启
       submitTime: 2000, //提交时间
       refreshTime: 6000, //刷新时间，如想快速重复提交，改小点，但是若有滑块会卡bug
       single: 0,//1为固定单选，0为随机单选
