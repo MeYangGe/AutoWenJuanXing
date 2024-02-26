@@ -1,27 +1,19 @@
 <template>
-  <div class="Wokoo-hide">
-    <input v-model="submitTime">
-    <el-row>
-      <el-button circle>
-        <Search/>
-      </el-button>
-      <el-button type="primary" circle>
-        <Edit/>
-      </el-button>
-      <el-button type="success" circle>
-        <Check/>
-      </el-button>
-      <el-button type="info" circle>
-        <Message/>
-      </el-button>
-      <el-button type="warning" circle>
-        <Star/>
-      </el-button>
-      <el-button type="danger" circle>
-        <Delete/>
-      </el-button>
-    </el-row>
-    <img :src="logo" class="Wokoo-hide-logo" alt="logo"/>
+  <div class="floating-window" ref="windowRef" @mousedown="startDrag">
+    <el-tabs v-model="activeTab">
+      <el-tab-pane label="Tab 1" name="1">
+        <el-select v-model="selectedTime" placeholder="请选择时间">
+          <el-option
+              v-for="time in times"
+              :key="time.value"
+              :label="time.label"
+              :value="time.value"
+          ></el-option>
+        </el-select>
+      </el-tab-pane>
+      <!-- 其他标签页 -->
+    </el-tabs>
+    <el-button class="close-btn" type="text" icon="el-icon-close" @click="closeWindow"></el-button>
   </div>
 </template>
 <script>
@@ -32,9 +24,29 @@ export default {
   data: function () {
     return {
       logo,
+      activeTab: 1,
+      selectedTime: '',
+      times: [
+        {label: '8:00 AM', value: '8:00'},
+        {label: '12:00 PM', value: '12:00'}
+        // 其他时间选项
+      ],
+      windowRef: {
+        value:{
+          offsetLeft:0,
+          offsetTop:0,
+          style:{
+            left: 0,
+            top: 0,
+          }
+        },
+
+      },
+      offsetX: 0,
+      offsetY: 0,
       // 配置自动提交间隔与自动刷新时间，单位ms
       auto: 1, //启用自动提交，默认关闭。0关闭，1开启
-      clearCookie: 0, //启用清除cookie，默认关闭。0关闭，1开启
+      clearCookie: 1, //启用清除cookie，默认关闭。0关闭，1开启
       submitTime: 2000, //提交时间
       refreshTime: 6000, //刷新时间，如想快速重复提交，改小点，但是若有滑块会卡bug
       single: 0,//1为固定单选，0为随机单选
@@ -53,12 +65,28 @@ export default {
     }
   },
   methods: {
-    handleClose() {
-      this.judgeType()
+    startDrag(e) {
+      e.preventDefault();
+      this.offsetX = e.clientX - this.windowRef.value.offsetLeft;
+      this.offsetY = e.clientY - this.windowRef.value.offsetTop;
+      document.addEventListener('mousemove', this.dragWindow);
+      document.addEventListener('mouseup', this.stopDrag);
     },
-    handlePrint() {
-      console.log(this.submitTime)
+
+    dragWindow(e) {
+      this.windowRef.value.style.left = e.clientX - this.offsetX + 'px';
+      this.windowRef.value.style.top = e.clientY - this.offsetY + 'px';
     },
+
+    stopDrag() {
+      document.removeEventListener('mousemove', this.dragWindow);
+      document.removeEventListener('mouseup', this.stopDrag);
+    },
+
+    closeWindow() {
+      // 关闭悬浮窗逻辑
+    },
+
     /**
      *
      * 随机数字

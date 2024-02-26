@@ -1,5 +1,5 @@
 
-.Wokoo-hide {
+.Wokoo {
   position: fixed;
   bottom : 20px;
   right : 20px;
@@ -9,20 +9,32 @@
   border : none;
   cursor : pointer;
   text-align: center;
-  width: 100px;
-  height: 40px;
   z-index: 999;
   display: flex;
   align-items: center;
   justify-content: center;
 }
-.Wokoo-hide-logo {
+.Wokoo-logo {
   width: 30px;
   height: 30px;
   border-radius: 50%;
   margin-right: 10px;
 }
+.floating-window .wokooApp{
+  position: fixed;
+  top: 50px; /* 适当调整位置以防止遮挡页面内容 */
+  left: 50px; /* 适当调整位置以防止遮挡页面内容 */
+  background-color: rgba(255, 255, 255, 0.9); /* 半透明背景 */
+  border: 1px solid #ccc;
+  padding: 10px;
+  z-index: 100; /* 确保在页面其他元素之上 */
+}
 
+.close-btn {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+}
 @keyframes Wokoo-app-logo-spin {
   from {
     transform: rotate(0deg);
