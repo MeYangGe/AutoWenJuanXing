@@ -335,7 +335,7 @@ export default {
               document.cookie = keys[i] + '=0;path=/;domain=' + document.domain + ';expires=' + new Date(0).toUTCString();//清除当前域名下的，例如 .m.kevis.com
             }
           }
-        }, 6000);
+        }, 10000);
       }
       // setTimeout(() => {
       //   // 自动刷新,解决验证问题
